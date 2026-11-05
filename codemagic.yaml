@@ -17,10 +17,19 @@ workflows:
           cp icon-1024.png assets/icon-foreground.png
       - name: Capacitor kurulumu
         script: |
+          cat > capacitor.config.json <<'EOF2'
+          {
+            "appId": "com.altay.tasacakbudeniz",
+            "appName": "Taşacak Bu Deniz",
+            "webDir": "www"
+          }
+          EOF2
+          node -v
           npm install
           npx cap add android
           npx capacitor-assets generate --android --iconBackgroundColor '#04162a' --iconBackgroundColorDark '#04162a'
           npx cap sync android
+          sed -i.bak "s/versionCode 1/versionCode $BUILD_NUMBER/" android/app/build.gradle
       - name: AAB uret
         script: |
           cd android
@@ -29,7 +38,7 @@ workflows:
       - name: AAB imzala
         script: |
           AAB=$(find android/app/build/outputs/bundle/release -name "*.aab" | head -1)
-          jarsigner -keystore "$CM_KEYSTORE_PATH" -storepass "$CM_KEYSTORE_PASSWORD" -keypass "$CM_KEY_PASSWORD" "$AAB" "$CM_KEY_ALIAS"
+          jarsigner -sigalg SHA256withRSA -digestalg SHA-256 -keystore "$CM_KEYSTORE_PATH" -storepass "$CM_KEYSTORE_PASSWORD" -keypass "$CM_KEY_PASSWORD" "$AAB" "$CM_KEY_ALIAS"
           mkdir -p out && cp "$AAB" out/tasacak-bu-deniz.aab
     artifacts:
       - out/*.aab
