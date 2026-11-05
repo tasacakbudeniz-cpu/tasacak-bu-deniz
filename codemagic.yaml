@@ -1,0 +1,35 @@
+workflows:
+  android:
+    name: Android
+    max_build_duration: 40
+    instance_type: linux_x2
+    environment:
+      node: 20
+      java: 17
+      android_signing:
+        - tbd_keystore
+    scripts:
+      - name: Web dosyalari
+        script: |
+          mkdir -p www assets
+          cp index.html manifest.json sw.js icon-192.png icon-512.png gizlilik.html sartlar.html www/
+          cp icon-1024.png assets/icon-only.png
+          cp icon-1024.png assets/icon-foreground.png
+      - name: Capacitor kurulumu
+        script: |
+          npm install
+          npx cap add android
+          npx capacitor-assets generate --android --iconBackgroundColor '#04162a' --iconBackgroundColorDark '#04162a'
+          npx cap sync android
+      - name: AAB uret
+        script: |
+          cd android
+          chmod +x gradlew
+          ./gradlew bundleRelease
+      - name: AAB imzala
+        script: |
+          AAB=$(find android/app/build/outputs/bundle/release -name "*.aab" | head -1)
+          jarsigner -keystore "$CM_KEYSTORE_PATH" -storepass "$CM_KEYSTORE_PASSWORD" -keypass "$CM_KEY_PASSWORD" "$AAB" "$CM_KEY_ALIAS"
+          mkdir -p out && cp "$AAB" out/tasacak-bu-deniz.aab
+    artifacts:
+      - out/*.aab
