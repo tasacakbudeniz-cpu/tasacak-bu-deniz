@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><meta name="theme-color" content="#030c12"><title>Taşacak Bu Deniz</title>
+<!DOCTYPE html><html lang="tr"><head><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-192.png"><meta name="theme-color" content="#0b3a52"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><meta name="theme-color" content="#030c12"><title>Taşacak Bu Deniz</title>
 <style>
 :root{--a:#f5b942;--a2:#b87a14;--b1:#0b3a52;--b2:#030c12}
 body[data-mode=duel]{--a:#ff5a3c;--a2:#b52a14;--b1:#3d0f12;--b2:#0b0305}
@@ -807,7 +807,7 @@ function rankNet(){const r=rk=='m'?'m':'w',W=r=='w';netRank(r);const c=NET.c[r],
 rkT=(r,i)=>NET.on&&NET.c[r]&&NET.c[r].me?' · '+NET.c[r].me.rank+'. sıra':' · '+(i+1)+'. sıra';
 wkCard=(wi,W)=>{const c=NET.on&&NET.c.w;if(!c||!c.me)return wkCard0(wi,W);return`<div class="c" onclick="nav('rank');rk='w';draw()"><div class="r"><b>🗓️ Haftalık sıralama</b><span class="chip">${c.me.rank}. / ${c.tot}</span></div><div class="s" style="margin-top:6px">${c.me.rank>1?'Bir üst sıraya çıkmak için düello oyna!':'Haftanın lideri sensin! 👑'}</div></div>`};
 </script><script>// auth.js — Kayıt / giriş (Firebase e-posta+şifre) ve benzersiz kullanıcı adı
-const AUTH_REQUIRED=true,AUTH_DEV=true; // AUTH_DEV: bağlantı yokken "test için devam" düğmesi. YAYINDA false yap!
+const AUTH_REQUIRED=true,AUTH_DEV=false; // AUTH_DEV: bağlantı yokken "test için devam" düğmesi. YAYINDA false yap!
 const AK='https://identitytoolkit.googleapis.com/v1/accounts:',AKQ='?key='+FBC.apiKey;
 const unk=n=>n.replace(/[çÇ]/g,'c').replace(/[ğĞ]/g,'g').replace(/[ıİ]/g,'i').replace(/[öÖ]/g,'o').replace(/[şŞ]/g,'s').replace(/[üÜ]/g,'u').toLowerCase();
 const URES=['admin','yonetici','moderator','mod','destek','support','taca','tbd','trt','trt1','esme','adil','sistem','root'];
