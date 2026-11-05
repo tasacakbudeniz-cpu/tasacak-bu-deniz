@@ -941,5 +941,22 @@ function blkP(){return bk()+`<h2>🚫 Engellediklerim</h2>${blk().length?blk().m
 SUBS.blk=blkP;
 // kayıt ekranında yasal bağlantılar
 if(typeof aui=='function'){const _au=aui;aui=function(){_au.apply(this,arguments);const o=document.getElementById('au');if(o&&!o.querySelector('.lgl'))o.insertAdjacentHTML('beforeend',`<div class="lgl s" style="text-align:center;margin-top:14px">Devam ederek <u onclick="lgv('terms')">Kullanım Şartları</u> ve <u onclick="lgv('priv')">Gizlilik Politikası</u>'nı kabul etmiş olursun.<br>Bu uygulama resmî değildir, hayranlar tarafından yapılmıştır.</div>`)}}
+</script><script>// slayt.js — Yönetici sayfasından eklenen ana sayfa slaytları (cfg/sl liste + cfg/si_<id> resimler). Tıklama hedefi yalnızca bu listeden seçilir.
+const SLG={quiz:"nav('play')",games:"nav('gm')",series:"nav('dz')",community:"nav('tp')",app:"nav('up')",feed:"go('feed')",club:"go('club')",anket:"go('anket')",rank:"nav('rank')"};
+async function slLoad(){try{const d=await nf(FB+'/cfg/sl');if(!d||!d.fields)return;const L=JSON.parse(nv(d.fields.l)||'[]').slice(0,8);if(!L.length)return;const out=[];
+ for(const s of L){const k='sl_'+s.id+'_'+s.v;let im=await ig(k);if(!im){const x=await nf(FB+'/cfg/si_'+s.id);im=x&&x.fields?nv(x.fields.d):'';if(im)ip(k,im)}if(!im||!/^data:image\//.test(im))continue;out.push({img:im,e:'',t:esc(s.t||''),d:esc(s.d||''),g:SLG[s.g]||'0',c:'#0e5a82,#04162a'})}
+ if(out.length){SLIDES.splice(0,SLIDES.length,...out);if(typeof tab!='undefined'&&tab=='home')draw()}}catch(e){}}
+const slI=setInterval(()=>{if(typeof NET!='undefined'&&NET.on){clearInterval(slI);slLoad()}},1500);
+// Uzaktan ayar: cfg/app (duyuru, bakım, kapatma), cfg/qx (ek sorular), cfg/tp (haftanın konusu)
+let RC={};
+async function rcLoad(){try{const d=await nf(FB+'/cfg/app');if(d&&d.fields){const f=d.fields;RC={ann:nv(f.ann)||'',annOn:!!nv(f.annOn),mt:!!nv(f.mt),mtMsg:nv(f.mtMsg)||'',off:(nv(f.off)||'').split(',')};}
+ const q=await nf(FB+'/cfg/qx');if(q&&q.fields){const L=JSON.parse(nv(q.fields.l)||'[]');const have=new Set(QS.map(x=>x[0]));for(const r of L)if(r.q&&!have.has(r.q)&&r.a&&r.w&&r.w.length==3)QS.push([r.q,r.a,...r.w,'g',r.m||'practice'])}
+ const t=await nf(FB+'/cfg/tp');if(t&&t.fields)RC.tp={t:nv(t.fields.t)||'',x:nv(t.fields.x)||''};
+ rcApply()}catch(e){}}
+function rcApply(){let m=document.getElementById('mtn');if(RC.mt){if(!m){m=document.createElement('div');m.id='mtn';m.style.cssText='position:fixed;inset:0;z-index:99999;background:#04162a;color:#fff;display:flex;align-items:center;justify-content:center;text-align:center;padding:30px;font:18px/1.5 system-ui';document.body.appendChild(m)}m.innerHTML='<div>🛠️<br><b>Bakımdayız</b><br><span style="font-size:15px;opacity:.8">'+esc(RC.mtMsg||'Kısa süre sonra döneceğiz.')+'</span></div>'}else if(m)m.remove();if(typeof tab!='undefined'&&tab=='home')draw()}
+const rcOff=k=>(RC.off||[]).includes(k),rcMsg='<div class="c" style="text-align:center;margin-top:20px">🔒 Bu bölüm geçici olarak kapalı.</div>';
+const _rh=home2;home2=function(){let h=_rh();if(RC.annOn&&RC.ann)h=h.replace('<h3>BÖLÜMLER</h3>','<div class="c" style="margin-top:10px">📢 '+esc(RC.ann)+'</div><h3>BÖLÜMLER</h3>');return h};
+for(const k of ['club','feed']){const f=SUBS[k];if(f)SUBS[k]=function(){if(rcOff(k))return rcMsg;let h=f.apply(this,arguments);if(k=='club'&&RC.tp&&RC.tp.t&&typeof h=='string')h='<div class="c" style="margin-top:10px">📌 <b>Haftanın konusu:</b> '+esc(RC.tp.t)+'<div style="opacity:.8;font-size:13px">'+esc(RC.tp.x)+'</div></div>'+h;return h}}
+const rcI=setInterval(()=>{if(typeof NET!='undefined'&&NET.on){clearInterval(rcI);rcLoad();setInterval(rcLoad,3e5)}},1500);
 </script>
 </body></html>
