@@ -30,6 +30,18 @@ workflows:
           npx capacitor-assets generate --android --iconBackgroundColor '#04162a' --iconBackgroundColorDark '#04162a'
           npx cap sync android
           sed -i.bak "s/versionCode 1/versionCode $BUILD_NUMBER/" android/app/build.gradle
+          RES=android/app/src/main/res
+          cat > $RES/values/ic_launcher_background.xml <<'EOF2'
+          <?xml version="1.0" encoding="utf-8"?>
+          <resources>
+              <color name="ic_launcher_background">#04162a</color>
+          </resources>
+          EOF2
+          for f in $RES/mipmap-anydpi-v26/*.xml; do
+            sed -i.bak 's#@mipmap/ic_launcher_background#@color/ic_launcher_background#g' "$f"
+            rm -f "$f.bak"
+          done
+          cat $RES/mipmap-anydpi-v26/ic_launcher.xml
       - name: AAB uret
         script: |
           cd android
