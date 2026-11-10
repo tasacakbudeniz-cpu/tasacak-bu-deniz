@@ -19,7 +19,7 @@ workflows:
         script: |
           cat > capacitor.config.json <<'EOF2'
           {
-            "appId": "com.altay.tasacakbudeniz",
+            "appId": "com.tasacakbudeniz.fan",
             "appName": "Taşacak Bu Deniz",
             "webDir": "www"
           }
