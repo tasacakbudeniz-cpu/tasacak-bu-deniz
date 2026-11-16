@@ -988,7 +988,7 @@ const rcI=setInterval(()=>{if(typeof NET!='undefined'&&NET.on){clearInterval(rcI
 </script><script>// destek.js — Uygulamaya Destek: reklam izleyerek destekçi seviyesi, rozet, sıralama; Play bağlantılı paylaşım
 const PLAY='https://play.google.com/store/apps/details?id=com.tasacakbudeniz.fan';
 const SUPL=[[1,'🥉','Destekçi',30],[10,'🥈','Gümüş Destekçi',100],[30,'🥇','Altın Destekçi',300],[100,'💎','Elmas Destekçi',1000]];
-SUPL.forEach((x,i)=>B.push(['sup'+i,x[1],x[2],x[0]+' reklam izleyerek uygulamaya destek ol']));
+SUPL.forEach((x,i)=>B.push(['sup'+i,x[1],x[2],x[0]+' reklam izleyerek uygulamaya destek ol',()=>0]));
 regLB({id:'sup',name:'Destekçiler',emoji:'💛',c:'#d9a52b,#8a5a0a',sub:'İzlenen reklam',scale:100});
 const supLv=()=>{let l=-1;SUPL.forEach((x,i)=>{if((S.sa||0)>=x[0])l=i});return l};
 function shareApp(){S.sh++;let g='';if(S.shd!=T()){S.shd=T();S.c+=10;g=' · +10 🐟';}sv();const d={title:'Taşacak Bu Deniz',text:'Taşacak Bu Deniz hayran uygulaması: quiz, mini oyunlar, liderlik tablosu ve Teori Köşesi! 🌊',url:PLAY};try{navigator.share?navigator.share(d):(navigator.clipboard.writeText(d.text+' '+PLAY),toast('Bağlantı kopyalandı'+g));if(g)toast('Teşekkürler!'+g)}catch(e){toast('Paylaşılamadı')}}
