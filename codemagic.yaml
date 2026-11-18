@@ -29,8 +29,8 @@ workflows:
           npx cap add android
           npx capacitor-assets generate --android --iconBackgroundColor '#04162a' --iconBackgroundColorDark '#04162a'
           npx cap sync android
-          ADM=${ADMOB_APP_ID:-ca-app-pub-8968138514994203~3654055881}
-          sed -i "s#</application>#<meta-data android:name=\"com.google.android.gms.ads.APPLICATION_ID\" android:value=\"$ADM\"/></application>#" android/app/src/main/AndroidManifest.xml
+          export ADM="${ADMOB_APP_ID:-ca-app-pub-8968138514994203~3654055881}"
+          node -e 'const fs=require("fs");const p="android/app/src/main/AndroidManifest.xml";let s=fs.readFileSync(p,"utf8");const m="<meta-data android:name=\"com.google.android.gms.ads.APPLICATION_ID\" android:value=\""+process.env.ADM+"\"/>";if(!s.includes("APPLICATION_ID"))s=s.replace("</application>",m+"</application>");fs.writeFileSync(p,s);'
           grep -c APPLICATION_ID android/app/src/main/AndroidManifest.xml
           sed -i.bak "s/versionCode 1/versionCode $BUILD_NUMBER/" android/app/build.gradle
           RES=android/app/src/main/res
