@@ -1080,5 +1080,77 @@ function flpS(){const cv=$('#fc');if(!cv)return;const x=cv.getContext('2d'),im=S
 window.__gt=0;
 document.addEventListener('click',e=>{const el=e.target.closest&&e.target.closest('[onclick]');if(!el)return;const c=el.getAttribute('onclick')||'';if(!/^(nav\('play'\)|find\(\)|go\('(mem|flp|kim|kel|plat)'\))$/.test(c))return;if(Date.now()-window.__gt<60000)return;e.stopImmediatePropagation();e.preventDefault();showRewardedAd(()=>{window.__gt=Date.now();new Function(c)()})},true);
 
+window.__qs0=QS.length;
+// ---- 1. bölüm yeni soruları ----
+QS.push(...[
+["1. bölümde Eleni mezuniyet gününde hangi renk elbise giyer?","Yeşil","Beyaz","Mavi","Kırmızı","ep","ep"],
+["1. bölümde babasının mektubuna göre Eleni aslında kimdir?","Türk ve Trabzonlu","Rum ve İstanbullu","Yunan ve Selanikli","Rum ve Trabzonlu","ep","practice"],
+["1. bölümde Eleni ailesini aramak için Trabzon'da hangi köye gider?","Furtuna","Sürmene","Uzungöl","Akçaabat","ep","daily"],
+["1. bölümde Koçarıların tabelasında ne yazar?","Furtunalılar giremez","Ziyaretçiler giremez","Doktorlar giremez","Kimse giremez","ep","sudden"],
+["1. bölümde Bedriye Teyze'nin kaybolan tosununun adı nedir?","Vedat","Behçet","Esme","Fadime","ep","chal"],
+["1. bölümde kaybolan tosun Vedat nereye kaçar?","Koçarıların köyüne","Furtuna'nın merkezine","Trabzon şehrine","Muhtarın evine","ep","duel"],
+["1. bölümde Adil, Furtuna köyüne ne için gider?","İstediği araziyi almak için","Doktor olarak çalışmak için","Balık tutmak için","Akrabasını ziyaret etmek için","ep","ep"],
+["1. bölümde Esme, Adil'e karşı hangi silahla çıkar?","Av tüfeği","Tabanca","Kılıç","Yay","ep","ep"],
+["1. bölümde Eleni'nin mezuniyet törenine ailesi neden katılmaz?","Hastanede bir vakayla ilgilenirler","Yurt dışındadırlar","Tatildedirler","Trabzon'dadırlar","ep","practice"],
+["1. bölümde Eleni'nin annesi babasının cenazesine neden gelmez?","Hastanede ameliyattadır","Hastadır","Yurt dışındadır","İzindedir","ep","daily"],
+["1. bölümde Eleni mezun olduktan kaç ay sonra Trabzon'a gelir?","3","1","6","12","ep","sudden"],
+["1. bölümde Adil'in pikabında kaç çocuk vardır?","12","10","8","15","ep","chal"],
+["1. bölümde Esme, araziyi vermek için ne ister?","Adil'in kemiklerinin tek tek kiralanmasını","Arazinin parasını","Adil'in köyden ayrılmasını","Muhtarlık seçimini","ep","duel"],
+["1. bölümde Adil, Esme'nin teklifine nasıl karşılık verir?","Alaycı bir tavırla \"ben düşüneyim\" der","Hemen kabul eder","Kızıp çıkar","Ağlamaya başlar","ep","ep"],
+["1. bölümde Adil araziyi alırsa ne yapmayacağını söyler?","Furtuna'yı yakıp yıkmayacağını","Koçarı'ya yardım etmeyeceğini","Esme'yle evlenmeyeceğini","Eleni'yi bırakmayacağını","ep","ep"],
+["1. bölümde Esme, Adil'i vurduktan sonra ne olur?","Adil yere düşer","Adil kaçar","Esme kaçar","Fadime yakalanır","ep","practice"],
+["1. bölümde Oruç ve Sevcan neyi kutlayacaktır?","Çıkmaya başlamalarının 6. ayını","Nişanlarını","1. yıldönümlerini","Doğum günlerini","ep","daily"],
+["1. bölümde Oruç hangi ismi duyunca ambulansı durdurur?","Adil Koçari","Esme Furtuna","Vedat","Eleni","ep","sudden"],
+["1. bölümde Oruç sedyeyi kimin almasını ister?","Hıdır abinin","Zarife'nin","Hıcran'ın","Fadime'nin","ep","chal"],
+["1. bölümde Adil'in kurşunu nerede çıkarılır?","Sağlık ocağında","Hastanede","Jandarma karakolunda","Ambulansta","ep","duel"],
+["1. bölümde Zarife ve Hıcran, Eleni'yi neden göndermek ister?","Büyük sır bulunmasın diye","Evlenmesi için","Okula dönmesi için","Tatil için","ep","ep"],
+["Eleni kaç yaşında tıp fakültesine başlamıştır?","14","15","16","18","cast","daily"],
+["Eleni'nin IQ seviyesi kaçtır?","175","140","150","160","cast","sudden"],
+["Eleni'nin beslenme tercihi nedir?","Vejetaryen","Vegan","Pesketaryen","Her şeyi yer","cast","chal"],
+["Eleni'nin annesi hangi milletten gelir?","Yunan","Rum","Türk","İstanbullu","cast","practice"],
+["Eleni'nin babası hangi milletten gelir?","İstanbullu Rum","Trabzonlu Türk","Yunan","Gürcü","cast","daily"],
+["Eleni hangi dine mensuptur?","Hristiyan","Müslüman","Yahudi","Ateist","cast","sudden"],
+["Eleni'nin diplomasına göre doğum tarihi nedir?","15 Mayıs 2005","15 Mayıs 2003","5 Mayıs 2005","15 Mayıs 2006","cast","chal"],
+["Eleni üniversiteyi hangi dereceyle bitirmiştir?","Birincilikle","İkincilikle","Üçüncülükle","Son sırada","cast","practice"]
+]);
+
+// ---- 1. bölüm: ek sorular (kullanıcı notları + en az iki kaynakla doğrulananlar) ----
+QS.push(...[
+["1. bölümde Eleni nerede büyümüştür?","Atina","İstanbul","Selanik","Trabzon","ep","ep"],
+["1. bölümde Eleni, Trabzon yolculuğunda Karadeniz ağzını kimden öğrenmeye çalışır?","Yapay zekâ asistanı Niko'dan","Annesinden","Bir kitaptan","Taksi şoföründen","ep","practice"],
+["1. bölümde Eleni, Furtuna köyüne hangi görevle gelir?","Sağlık ocağı doktoru","Öğretmen","Muhtar yardımcısı","Gazeteci","ep","daily"],
+["Furtuna köyünün muhtarı kimdir?","Esme","Zarife","Hicran","Sevcan","ep","duel"],
+["1. bölümde Eleni köye adım attığı gün neyin ortasında kalır?","Kan davasının","Bir düğünün","Bir yangının","Bir selin","ep","sudden"],
+["1. bölümde Şerif Furtuna nerededir?","Cezaevinde","Köyde","Atina'da","Hastanede","ep","chal"],
+["1. bölümde Esme'ye yıllar önce doğurduğu bebeği hakkında ne söylenmiştir?","Öldüğü","Kaybolduğu","Evlatlık verildiği","Hastanede kaldığı","ep","duel"],
+["1. bölümde Eleni'yi bebekken Yunan bir aileye satan karakter kimdir?","Şerif","Oruç","Gezep","İso","ep","ep"],
+["1. bölümün sonunda Eleni'nin gerçek annesinin kim olduğu ortaya çıkar?","Esme","Zarife","Hicran","Sevcan","ep","ep"],
+["1. bölümün sonunda Eleni'nin gerçek babasının kim olduğu ortaya çıkar?","Adil","Oruç","Şerif","Gezep","ep","ep"],
+["Eleni gerçek ailesini nasıl öğrenir?","Yunan babasının bıraktığı mektupla","Bir DNA testiyle","Eski bir fotoğrafla","Bir telefonla","ep","practice"],
+["Eleni'yi büyüten aile hangi milletten gelir?","Yunan","Türk","Gürcü","Rus","ep","daily"],
+["1. bölümde Furtuna köyünün tabelasında ne yazar?","Koçarılar giremez","Yabancılar giremez","Doktorlar giremez","Kimse giremez","ep","ep"],
+["1. bölümde Adil, Gezep'ten kaç çocuk bulmasını ister?","Bir düzine","Üç","Beş","Yirmi","ep","practice"],
+["1. bölümde Adil'in çocuklarla Furtuna köyüne gelişinde Fadime ne yapar?","Pikabı alıp köye geri döner","Adil'le kalır","Esme'ye ateş eder","Eleni'yi arar","ep","daily"],
+["1. bölümde Adil'in babasını kimin öldürdüğü söylenir?","Şerif Furtuna","Esme","Oruç","Eyüphan","ep","sudden"],
+["1. bölümde Eleni'nin mektubunu kim okur?","Zarife ve Hicran","Esme ve Oruç","Adil ve Gezep","Sevcan ve Fadime","ep","chal"],
+["1. bölümde köylüleri Eleni'ye karşı kim kışkırtır?","Zarife ve Hicran","Esme ve Oruç","Adil ve Fadime","Şirin ve Sevcan","ep","duel"],
+["1. bölümde Eleni koşarken kovalardaki balıkları ne yapar?","Denize geri atar","Yanına alır","Pişirir","Balıkçıya verir","ep","ep"],
+["1. bölümde balıkların denize atılmasına Oruç nasıl tepki verir?","\"Benim olan şeyi niye denize döküyorsun?\" der","Gülüp geçer","Eleni'ye teşekkür eder","Balıkları toplar","ep","ep"],
+["1. bölümde Adil'in ailesi sağlık ocağına gelince Eleni ne yapar?","Koşuya çıkar","Ameliyata girer","Esme'yi arar","Köyden ayrılır","ep","practice"],
+["1. bölümde Eleni ile Esme ilk nasıl karşılaşır?","Arabaları çarpışır","Sağlık ocağında","Mezarlıkta","Pazarda","ep","daily"],
+["1. bölümde arabası çalışmayınca Esme ne yapar?","Eleni'nin arabasına el koyar","Yürüyerek gider","Oruç'u çağırır","Arabayı bırakıp kaçar","ep","sudden"],
+["1. bölümde Bedriye Teyze'nin oğlunun adı nedir?","Behçet","Vedat","Hıdır","Gezep","ep","chal"],
+["Oruç'un annesi kimdir?","Zarife","Hicran","Esme","Şirin","ep","sudden"],
+["Hıdır karakterini kim canlandırır?","Erkan Yüce","Onur Dilber","Batuhan Bayar","Ali Öner","cast","practice"],
+["Şirin karakterini kim canlandırır?","Gamze Süner Atay","Hande Nur Tekin","Seda Soysal","Burcu Cavrar","cast","daily"],
+["Eleni'nin evlat edinen annesi Melina'yı kim canlandırır?","Gerçek Alnıaçık","Yeşim Ceren Bozoğlu","Burcu Cavrar","Gamze Süner Atay","cast","sudden"],
+["Sevcan karakterini kim canlandırır?","Hande Nur Tekin","Burcu Cavrar","Seda Soysal","Zeynep Atılgan","cast","chal"],
+["Dizinin İngilizce adı nedir?","Deep in Love","Rising Sea","Black Sea Storm","Furtuna","g","practice"],
+["Dizinin senaristlerinden biri kimdir?","Nehir Erdem","Çağrı Bayrak","Onur Güvenatam","Ahmet Katıksız","g","daily"]
+]);
+
+// ---- Yeni sorular tüm modlarda çıksın (her moda kopya) ----
+(()=>{const M=['ep','practice','daily','sudden','chal','duel'],B=QS.slice(window.__qs0);B.forEach(r=>M.forEach(m=>{if(m!=r[6])QS.push([r[0],r[1],r[2],r[3],r[4],r[5],m])}))})();
+
 </script>
 </body></html>
