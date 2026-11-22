@@ -519,7 +519,7 @@ function prize(){return bk()+`<h2>🏆 Sıralama Kuralları</h2><div class="c"><
 <div class="c s">ℹ️ Sıralamalarda para ödülü yoktur; ödüller uygulama içi hamsi hediyesidir. Demo sürümde listedeki bazı oyuncular antrenman botlarıdır.</div>`}
 
 // Ödül sıralaması: günün en iyi 5 düellosu sayılır (fazla hak alanın avantajı sınırlı kalır)
-function dayPts(r){if(!S.dl||S.dl.d!=T())S.dl={d:T(),a:[]};const f=a=>[...a].sort((x,y)=>y-x).slice(0,5).reduce((x,y)=>x+y,0),b=f(S.dl.a);S.dl.a.push(r);return f(S.dl.a)-b}
+function dayPts(r){return r}
 // Oyunlardan kazanılan hamsi: günlük sınırlı ve yalnızca bu hamsi puana çevrilebilir
 const GHCAP=600;
 function gHam(x){if(S.gd!=T()){S.gd=T();S.gn=0}const g=Math.max(0,Math.min(Math.round(x),GHCAP-S.gn));S.gn+=g;S.gh+=g;return g}
