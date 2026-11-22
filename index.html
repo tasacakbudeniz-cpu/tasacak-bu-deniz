@@ -1183,5 +1183,18 @@ function dailyQs(){const seen=new Set(),pool=[];QS.forEach(q=>{if(!seen.has(q[0]
  for(let i=0;i<L&&out.length<n;i++){const q=ord[(pos*n+i)%L];if(!rp.includes(q[0])&&!out.includes(q))out.push(q)}
  return out}
 
+// ---- Yerel bildirimler: her gün 12:00 ve 20:00, 90 gün (telefonda planlanır, sunucu gerekmez) ----
+const NOT_OGLE=['Bugünün 10 sorusu seni bekliyor 🧠','Quiz arenasında rakibin seni arıyor ⚔️','Dalga Kuşu\'nda rekorunu kırabilir misin? 🐟','Platform macerasında bir bölüm daha 🏃','Yeni sorularla bilgini test et ❓','Günün ilk düellosu için hazır mısın? ⚔️','Hamsi topla, sıralamada yüksel 🏆'];
+const NOT_AKSAM=['Akşam quizi zamanı! Bugünkü sorular hâlâ açık 🌙','Bir düello yap, sıralamada yüksel ⚔️','Platform macerasında kaldığın yerden devam et 🏃','Dalga Kuşu seni çağırıyor 🐟','Bugünkü 10 soruyu tamamladın mı? ❓','Sıralamada kimler önde? Bir maçla öğren 🏆','Bir bölüm daha, bir bölüm daha 🎬'];
+async function notiInit(){const L=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.LocalNotifications;if(!L)return;
+ try{let p=await L.checkPermissions();if(p.display!='granted')p=await L.requestPermissions();if(p.display!='granted')return;
+  const now=new Date(),arr=[];
+  for(let d=0;d<90;d++)for(const sl of [12,20]){const t=new Date(now);t.setDate(now.getDate()+d);t.setHours(sl,0,0,0);if(t<=now)continue;
+   const pool=sl==12?NOT_OGLE:NOT_AKSAM;arr.push({id:100000+d*2+(sl==20?1:0),title:'Taşacak Bu Deniz',body:pool[d%pool.length],schedule:{at:t}})}
+  await L.cancel({notifications:(await L.getPending()).notifications.map(n=>({id:n.id}))});
+  if(arr.length)await L.schedule({notifications:arr});
+ }catch(e){}}
+setTimeout(notiInit,4000);
+
 </script>
 </body></html>
