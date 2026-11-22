@@ -1196,5 +1196,9 @@ async function notiInit(){const L=window.Capacitor&&Capacitor.Plugins&&Capacitor
  }catch(e){}}
 setTimeout(notiInit,4000);
 
+// ---- Eski sorular da tüm modlarda (bölüm quizi hariç): düello/alıştırma/günlük/ani ölüm/meydan okuma karışık ----
+(()=>{const M=['practice','daily','sudden','chal','duel'];const have=new Set(QS.map(q=>q[0]+'|'+q[6]));const seen=new Set(),base=[];QS.forEach(q=>{if(!seen.has(q[0])){seen.add(q[0]);base.push(q)}});
+ base.forEach(r=>M.forEach(m=>{const k=r[0]+'|'+m;if(!have.has(k)){have.add(k);QS.push([r[0],r[1],r[2],r[3],r[4],r[5],m])}}))})();
+
 </script>
 </body></html>
