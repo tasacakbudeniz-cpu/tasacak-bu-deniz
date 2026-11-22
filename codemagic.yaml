@@ -33,6 +33,7 @@ workflows:
           node -e 'const fs=require("fs");const p="android/app/src/main/AndroidManifest.xml";let s=fs.readFileSync(p,"utf8");const m="<meta-data android:name=\"com.google.android.gms.ads.APPLICATION_ID\" android:value=\""+process.env.ADM+"\"/>";if(!s.includes("APPLICATION_ID"))s=s.replace("</application>",m+"</application>");fs.writeFileSync(p,s);'
           grep -c APPLICATION_ID android/app/src/main/AndroidManifest.xml
           sed -i.bak "s/versionCode 1/versionCode $BUILD_NUMBER/" android/app/build.gradle
+          node -e 'const fs=require("fs");const p="android/app/build.gradle";let s=fs.readFileSync(p,"utf8");s=s.replace(/minifyEnabled false/g,"minifyEnabled true");if(!/shrinkResources/.test(s))s=s.replace("minifyEnabled true","minifyEnabled true\n            shrinkResources true");fs.writeFileSync(p,s);'
           RES=android/app/src/main/res
           cat > $RES/values/ic_launcher_background.xml <<'EOF2'
           <?xml version="1.0" encoding="utf-8"?>
@@ -57,3 +58,4 @@ workflows:
           mkdir -p out && cp "$AAB" out/tasacak-bu-deniz.aab
     artifacts:
       - out/*.aab
+      - android/app/build/outputs/mapping/release/mapping.txt
