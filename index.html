@@ -531,12 +531,12 @@ const ADS={test:false,rew:'ca-app-pub-8968138514994203/8432894791',ready:0,busy:
 const _adDemo=showRewardedAd;
 const adNat=()=>{try{return window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform()&&Capacitor.Plugins&&Capacitor.Plugins.AdMob}catch(e){return null}};
 async function adInit(){const A=adNat();if(!A||ADS.ready)return;try{try{const i=await A.requestConsentInfo();if(i&&i.isConsentFormAvailable&&i.status=='REQUIRED')await A.showConsentForm()}catch(e){}await A.initialize({initializeForTesting:ADS.test});ADS.ready=1}catch(e){}}
-showRewardedAd=function(cb){const A=adNat();if(!A)return _adDemo(cb);if(ADS.busy)return;ADS.busy=1;let ok=0,done=0;const subs=[];const fin=()=>{if(done)return;done=1;ADS.busy=0;subs.forEach(s=>{try{s.remove()}catch(e){}});if(ok)cb()};
+showRewardedAd=function(cb){const A=adNat();if(!A)return _adDemo(cb);if(ADS.busy)return;ADS.busy=1;let ok=0,done=0;const subs=[];const fin=()=>{if(done)return;done=1;ADS.busy=0;ADS.pre=0;subs.forEach(s=>{try{s.remove()}catch(e){}});if(ok)cb();adPre()};
  (async()=>{try{await adInit();
   subs.push(await A.addListener('onRewardedVideoAdReward',()=>{ok=1}));
   subs.push(await A.addListener('onRewardedVideoAdDismissed',()=>setTimeout(fin,300)));
   subs.push(await A.addListener('onRewardedVideoAdFailedToShow',()=>{ok=1;toast('Reklam şu an yok, ödülün hediye! 🎁');fin()}));
-  await A.prepareRewardVideoAd({adId:ADS.rew,isTesting:ADS.test});await A.showRewardVideoAd()}catch(e){ok=1;toast('Reklam şu an yok, ödülün hediye! 🎁');fin()}})()};
+  if(!ADS.pre)await A.prepareRewardVideoAd({adId:ADS.rew,isTesting:ADS.test});await A.showRewardVideoAd()}catch(e){ok=1;toast('Reklam şu an yok, ödülün hediye! 🎁');fin()}})()};function adPre(){const A=adNat();if(!A||ADS.busy||ADS.pre)return;A.prepareRewardVideoAd({adId:ADS.rew,isTesting:ADS.test}).then(()=>{ADS.pre=1}).catch(()=>{ADS.pre=0})}setTimeout(adPre,6000);
 // Quiz (Hayatta Kal / Ani Ölüm): canlar bitince 1 kez reklamla devam
 const _nxA=nx;nx=function(){if(G&&(G.m=='practice'||G.m=='sudden')&&G.lv<=0&&!G.rv&&G.i+1<G.qs.length+1&&G.ok>0){ov(`<div class="c" style="text-align:center"><h2>💔 Canların bitti</h2><p class="s">Reklam izle, 1 canla devam et!</p><button class="b" onclick="adCont()">📺 Reklam izle · devam et</button><button class="g" onclick="adEnd()">Bitir</button></div>`);return}_nxA()};
 function adCont(){shut();showRewardedAd(()=>{if(!G)return;G.rv=1;G.lv=1;_nxA()})}
