@@ -1234,7 +1234,7 @@ async function nameUid(nm){const k=String(nm||'').trim().toLowerCase();const r=a
 function shrink(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,640/Math.max(im.width,im.height));const c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',0.72))};im.onerror=rej;im.src=r.result};r.onerror=rej;r.readAsDataURL(file)})}
 function norm(c){c=c||{};return {cards:c.cards||[],trl:c.trl||[],photos:c.photos||[],lig:c.lig||[],duyuru:c.duyuru||[],bakim:c.bakim||{on:false,msg:''},note:c.note||''}}
 const cat=k=>CATS.find(c=>c.k==k);
-async function adOpen(){await nauth();D=norm(await docGet('main'));TAB='dash';Q='';DIRTY=0;draw()}
+async function adOpen(){TAB='dash';Q='';DIRTY=0;D=norm({});draw();msg('Yükleniyor...');try{await nauth();D=norm(await docGet('main'));draw()}catch(e){draw();msg('İnternet bağlantısı yok ya da sunucuya ulaşılamadı. Uçak modunu kapatıp tekrar dene.')}}
 function nav(){return `<div class="adN">${CATS.map(c=>`<button style="${c.k==TAB?BTG:BT}" onclick="adTab('${c.k}')">${c.l}</button>`).join('')}</div>`}
 function itemHtml(c,it,i){const pic=c.pic;const n=i+1;const tot=D[c.k].length;
  return `<div class="adC"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px"><b>#${n}</b><span>
