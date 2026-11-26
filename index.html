@@ -1210,23 +1210,23 @@ const TABS=[['cards','🃏 Kartlar'],['trl','🎬 Fragman'],['photos','📸 Foto
 let D={},TAB='cards';
 function adBox(h){adClose();const d=document.createElement('div');d.id='adm';d.style.cssText='position:fixed;inset:0;background:#000c;z-index:9999;overflow:auto;padding:14px';d.innerHTML=`<div style="background:#fff;color:#111;max-width:520px;margin:auto;padding:14px;border-radius:12px;font-size:15px">${h}</div>`;document.body.append(d)}
 window.adClose=()=>{const d=document.getElementById('adm');if(d)d.remove()};
-function adLogin(){adBox(`<h3>🔐 Yönetici girişi</h3><input id="adp" type="password" placeholder="Şifre" style="width:100%;padding:10px;font-size:16px;box-sizing:border-box"><br><br><button id="adgo">Giriş</button> <button onclick="adClose()">Kapat</button>`);
+function adLogin(){adBox(`<h3>🔐 Yönetici girişi</h3><input id="adp" type="password" placeholder="Şifre" style="width:100%;padding:10px;font-size:16px;box-sizing:border-box;background:#fff;color:#111;-webkit-text-fill-color:#111;border:1px solid #888;border-radius:6px;-webkit-appearance:none;opacity:1;"><br><br><button id="adgo">Giriş</button> <button onclick="adClose()">Kapat</button>`);
  document.getElementById('adgo').onclick=()=>{if(document.getElementById('adp').value===PW)adOpen();else toast('Yanlış şifre')}}
 async function cfgGet(){try{const r=await fetch(FB+'/cfg/main');if(!r.ok)return {};const d=await r.json();return JSON.parse(d.fields.data.stringValue)}catch(e){return {}}}
 async function cfgSet(c){await nauth();const r=await fetch(FB+'/cfg/main',{method:'PATCH',headers:{'Content-Type':'application/json',Authorization:'Bearer '+NET.tk},body:JSON.stringify({fields:{data:{stringValue:JSON.stringify(c)}}})});if(!r.ok)throw new Error('Kayıt hatası '+r.status)}
 async function adOpen(){await nauth();D=await cfgGet();['cards','trl','photos'].forEach(k=>D[k]=D[k]||[]);D.note=D.note||'';TAB='cards';draw()}
 function draw(){
- const body=TAB=='note'?`<label>Günlük bildirim metni</label><textarea style="width:100%;height:120px;font-size:15px;box-sizing:border-box" oninput="D.note=this.value">${esc(D.note)}</textarea>`
-  :D[TAB].map((it,i)=>`<div style="border:1px solid #ccc;border-radius:10px;padding:8px;margin:8px 0">${F[TAB].map(([k,l])=>`<label style="display:block;font-size:12px;margin-top:4px">${l}<input value="${esc(it[k]||'')}" oninput="adSet(${i},'${k}',this.value)" style="width:100%;padding:6px;font-size:15px;box-sizing:border-box"></label>`).join('')}<button onclick="adDel(${i})" style="margin-top:6px">🗑 Sil</button></div>`).join('')+`<button onclick="adAdd()">＋ Yeni ekle</button>`;
+ const body=TAB=='note'?`<label>Günlük bildirim metni</label><textarea style="width:100%;height:120px;font-size:16px;padding:8px;box-sizing:border-box;background:#fff;color:#111;-webkit-text-fill-color:#111;border:1px solid #888;border-radius:6px;-webkit-appearance:none;opacity:1;" oninput="D.note=this.value">${esc(D.note)}</textarea>`
+  :D[TAB].map((it,i)=>`<div style="border:1px solid #ccc;border-radius:10px;padding:8px;margin:8px 0">${F[TAB].map(([k,l])=>`<label style="display:block;font-size:12px;margin-top:4px">${l}<input value="${esc(it[k]||'')}" oninput="adSet(${i},'${k}',this.value)" style="width:100%;padding:8px;font-size:16px;box-sizing:border-box;background:#fff;color:#111;-webkit-text-fill-color:#111;border:1px solid #888;border-radius:6px;-webkit-appearance:none;opacity:1;"></label>`).join('')}<button onclick="adDel(${i})" style="margin-top:6px">🗑 Sil</button></div>`).join('')+`<button onclick="adAdd()">＋ Yeni ekle</button>`;
  const uid=NET.uid||'(giriş yok)';
- adBox(`<h3 style="margin:0 0 6px">🛠 Yönetici paneli</h3><div style="font-size:11px;color:#666;word-break:break-all">UID: ${esc(uid)}</div><div style="margin:10px 0">${TABS.map(([k,l])=>`<button onclick="adTab('${k}')" style="margin:2px;${k==TAB?'font-weight:bold':''}">${l}</button>`).join('')}</div>${body}<br><button onclick="adSave()">💾 Kaydet</button> <button onclick="adClose()">Kapat</button>`)}
+ adBox(`<h3 style="margin:0 0 6px">🛠 Yönetici paneli</h3><div style="font-size:11px;color:#666;word-break:break-all">UID: ${esc(uid)}</div><div style="margin:10px 0">${TABS.map(([k,l])=>`<button onclick="adTab('${k}')" style="margin:2px;${k==TAB?'font-weight:bold':''}">${l}</button>`).join('')}</div>${body}<div id="adst" style="color:#c00;font-size:13px;margin-top:8px"></div><br><button onclick="adSave()">💾 Kaydet</button> <button onclick="adClose()">Kapat</button>`)}
 window.adTab=t=>{TAB=t;draw()};
 window.adSet=(i,k,v)=>{D[TAB][i][k]=v};
 window.adDel=i=>{D[TAB].splice(i,1);draw()};
 window.adAdd=()=>{const o={};F[TAB].forEach(([k])=>o[k]='');D[TAB].push(o);draw()};
 window.adSave=async()=>{const clean=a=>a.filter(o=>Object.values(o).some(v=>String(v).trim()));
  const c={cards:clean(D.cards),trl:clean(D.trl),photos:clean(D.photos),note:D.note||''};
- try{await cfgSet(c);D=c;toast('✅ Kaydedildi');adClose()}catch(e){toast(e.message)}};
+ const st=document.getElementById('adst');if(st)st.textContent='Kaydediliyor...';try{await cfgSet(c);D=c;toast('✅ Kaydedildi');adClose()}catch(e){const m='Kaydedilmedi: '+e.message+' (yetki hatası ise Firebase adm kaydını kontrol et)';const s2=document.getElementById('adst');if(s2)s2.textContent=m;toast(m)}};
 })();
 </script>
 </body></html>
