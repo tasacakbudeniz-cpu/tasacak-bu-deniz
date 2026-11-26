@@ -1224,8 +1224,8 @@ function css(){if(document.getElementById('adcss'))return;const s=document.creat
 function open(){css();let d=document.getElementById('adm');if(!d){d=document.createElement('div');d.id='adm';document.body.append(d)}return d}
 window.adClose=()=>{const d=document.getElementById('adm');if(d)d.remove()};
 function msg(t){const s=document.getElementById('admsg');if(s)s.textContent=t;return t}
-function adLogin(){const d=open();d.innerHTML=`<div style="padding:30px;max-width:420px;margin:auto;width:100%"><h2>🔐 Yönetici girişi</h2><input id="adp" type="password" placeholder="Şifre" style="${IS}"><br><br><button style="${BTG}" id="adgo">Giriş</button> <button style="${BT}" onclick="adClose()">Kapat</button></div>`;
- document.getElementById('adgo').onclick=()=>{if(document.getElementById('adp').value===PW)adOpen();else toast('Yanlış şifre')}}
+function adLogin(){const d=open();d.innerHTML=`<div style="padding:30px;max-width:420px;margin:auto;width:100%"><h2>🔐 Yönetici girişi</h2><input id="adp" type="password" placeholder="Şifre" style="${IS}" onkeydown="if(event.key=='Enter')adGo()"><br><br><button style="${BTG}" onclick="adGo()">Giriş</button> <button style="${BT}" onclick="adClose()">Kapat</button><div id="admsg" style="color:#ff8a8a;margin-top:10px;font-size:14px"></div></div>`;setTimeout(()=>{const p=document.getElementById("adp");if(p)p.focus()},300)}
+window.adGo=()=>{const v=(document.getElementById("adp")||{}).value||"";if(v.trim()===PW){msg("Giriş yapılıyor...");adOpen()}else msg("Yanlış şifre, tekrar dene")};
 async function docGet(n){try{const r=await fetch(FB+'/cfg/'+n);if(!r.ok)return {};const d=await r.json();return JSON.parse(d.fields.data.stringValue)}catch(e){return {}}}
 async function docSet(n,c){await nauth();const r=await fetch(FB+'/cfg/'+n,{method:'PATCH',headers:H(),body:JSON.stringify({fields:{data:{stringValue:JSON.stringify(c)}}})});if(!r.ok)throw new Error('Kayıt hatası '+r.status)}
 async function imgSet(id,d){await nauth();const r=await fetch(FB+'/imgs/'+id,{method:'PATCH',headers:H(),body:JSON.stringify({fields:{d:{stringValue:d}}})});if(!r.ok)throw new Error('Fotoğraf kaydedilemedi '+r.status)}
