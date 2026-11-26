@@ -1201,4 +1201,23 @@ setTimeout(notiInit,4000);
  base.forEach(r=>M.forEach(m=>{const k=r[0]+'|'+m;if(!have.has(k)){have.add(k);QS.push([r[0],r[1],r[2],r[3],r[4],r[5],m])}}))})();
 
 </script>
+<script>// admin.js — gizli yönetim paneli. Karakterler başlığına 10 kez dokun, şifre sor.
+(function(){
+const PW='987654321';let tc=0,tt=0;
+document.addEventListener('click',e=>{const h=e.target.closest&&e.target.closest('h2');if(!h||!/Karakterler/.test(h.textContent))return;const n=Date.now();if(n-tt>3000)tc=0;tt=n;if(++tc>=10){tc=0;adLogin()}},true);
+function adLogin(){adBox(`<h3>🔐 Yönetici</h3><input id="adp" type="password" placeholder="Şifre" style="width:100%;padding:10px;font-size:16px"><br><br><button id="adgo">Giriş</button> <button onclick="adClose()">Kapat</button>`);
+ document.getElementById('adgo').onclick=()=>{if(document.getElementById('adp').value===PW)adOpen();else toast('Yanlış şifre')}}
+function adBox(h){adClose();const d=document.createElement('div');d.id='adm';d.style.cssText='position:fixed;inset:0;background:#000c;z-index:9999;overflow:auto;padding:14px';d.innerHTML=`<div style="background:#fff;color:#111;max-width:520px;margin:auto;padding:14px;border-radius:12px;font-size:14px">${h}</div>`;document.body.append(d)}
+window.adClose=()=>{const d=document.getElementById('adm');if(d)d.remove()};
+const SEC=[['cards','Ana sayfa kartları','[{"t":"Başlık","img":"https://...jpg","l":"https://..."}]'],['trl','Fragmanlar','[{"t":"Fragman adı","yt":"https://youtu.be/..."}]'],['photos','Fan akışı fotoğrafları','[{"t":"Açıklama","img":"https://...jpg"}]'],['note','Günlük bildirim metni','"Bugün yeni bölüm var!"']];
+async function cfgGet(){try{const r=await fetch(FB+'/cfg/main');if(!r.ok)return {};const d=await r.json();return JSON.parse(d.fields.data.stringValue)}catch(e){return {}}}
+async function cfgSet(c){await nauth();const r=await fetch(FB+'/cfg/main',{method:'PATCH',headers:{'Content-Type':'application/json',Authorization:'Bearer '+NET.tk},body:JSON.stringify({fields:{data:{stringValue:JSON.stringify(c)}}})});if(!r.ok)throw new Error('Kayıt hatası '+r.status)}
+async function adOpen(){await nauth();const c=await cfgGet();
+ const uid=NET.uid||'(giriş yok)';
+ const areas=SEC.map(s=>`<b>${s[1]}</b><br><textarea id="ad_${s[0]}" style="width:100%;height:90px;font-size:12px">${esc(JSON.stringify(c[s[0]]??(s[0]=='note'?'':[]),null,0))}</textarea><br>`).join('');
+ adBox(`<h3>🛠 Yönetici paneli</h3><div style="font-size:12px">Senin UID: <code>${esc(uid)}</code></div><br>${areas}<button id="adsv">Kaydet</button> <button onclick="adClose()">Kapat</button>`);
+ document.getElementById('adsv').onclick=async()=>{const o={};try{for(const s of SEC)o[s[0]]=JSON.parse(document.getElementById('ad_'+s[0]).value)}catch(e){toast('JSON hatası: '+s[1]);return}
+  try{await cfgSet(o);toast('✅ Kaydedildi');adClose()}catch(e){toast(e.message)}}}
+})();
+</script>
 </body></html>
