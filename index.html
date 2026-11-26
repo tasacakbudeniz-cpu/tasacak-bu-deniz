@@ -1206,7 +1206,7 @@ setTimeout(notiInit,4000);
 const PW='987654321';let tc=0,tt=0;
 document.addEventListener('click',e=>{const h=e.target.closest&&e.target.closest('h2');if(!h||!/Karakterler/.test(h.textContent))return;const n=Date.now();if(n-tt>3000)tc=0;tt=n;if(++tc>=10){tc=0;adLogin()}},true);
 const IS="background:#fff;color:#111;-webkit-text-fill-color:#111;border:1px solid #888;border-radius:6px;-webkit-appearance:none;opacity:1;width:100%;padding:8px;font-size:16px;box-sizing:border-box;";
-const F={cards:[['t','Başlık'],['img','Resim (linkini yaz ya da galeriden seç)'],['l','Tıklanınca açılacak link']],trl:[['t','Fragman adı'],['yt','YouTube linki']],photos:[['t','Açıklama'],['img','Resim (linkini yaz ya da galeriden seç)']],lig:[['uid','Kullanıcı UID'],['d','Düzeltme puanı (+ ya da -)'],['n','Not']]};
+const F={cards:[['t','Başlık'],['img','Resim (linkini yaz ya da galeriden seç)'],['l','Tıklanınca açılacak link']],trl:[['t','Fragman adı'],['yt','YouTube linki']],photos:[['t','Açıklama'],['img','Resim (linkini yaz ya da galeriden seç)']],lig:[['nm','Kullanıcı adı (örn: altay1)'],['d','Düzeltme puanı (+ ya da -)'],['n','Not']]};
 const PIC={cards:1,photos:1};
 const TABS=[['cards','🃏 Kartlar'],['trl','🎬 Fragman'],['photos','📸 Fotoğraf'],['lig','🏆 Lig'],['note','🔔 Bildirim']];
 let D={},TAB='cards';const IC={};
@@ -1234,9 +1234,10 @@ window.adSet=(i,k,v)=>{D[TAB][i][k]=v};
 window.adDel=i=>{D[TAB].splice(i,1);draw()};
 window.adAdd=()=>{const o={};F[TAB].forEach(([k])=>o[k]='');D[TAB].push(o);draw()};
 window.adPick=async(i,inp)=>{const f=inp.files&&inp.files[0];if(!f)return;msg('Fotoğraf hazırlanıyor...');try{const d=await shrink(f);if(d.length>950000)throw new Error('Fotoğraf hâlâ çok büyük, başka bir fotoğraf dene');const id=Date.now().toString(36)+Math.random().toString(36).slice(2,6);await imgSet(id,d);IC[id]=d;D[TAB][i].img='db:'+id;draw();msg('✅ Fotoğraf eklendi, kaydetmeyi unutma')}catch(e){msg('Hata: '+e.message)}};
+async function nameUid(nm){const k=String(nm||'').trim().toLowerCase();const r=await fetch(FB+'/names/'+k);if(!r.ok)throw new Error('Kullanıcı bulunamadı: '+k);const j=await r.json();return j.fields.u.stringValue}
 window.adSave=async()=>{const clean=a=>a.filter(o=>Object.values(o).some(v=>String(v).trim()));
- const c={cards:clean(D.cards),trl:clean(D.trl),photos:clean(D.photos),lig:clean(D.lig).map(o=>({...o,d:Number(o.d)||0})),note:D.note||''};
- msg('Kaydediliyor...');try{const prev=await docGet('main');await docSet('prev',prev);await docSet('main',c);D=c;toast('✅ Kaydedildi');adClose()}catch(e){msg('Kaydedilmedi: '+e.message)}};
+ const c={cards:clean(D.cards),trl:clean(D.trl),photos:clean(D.photos),lig:[],note:D.note||''};
+ msg('Kaydediliyor...');try{for(const o of clean(D.lig)){const uid=await nameUid(o.nm);c.lig.push({uid,nm:String(o.nm).trim().toLowerCase(),d:Number(o.d)||0,n:o.n||''})}const prev=await docGet('main');await docSet('prev',prev);await docSet('main',c);D=c;toast('✅ Kaydedildi');adClose()}catch(e){msg('Kaydedilmedi: '+e.message)}};
 window.adUndo=async()=>{msg('Geri alınıyor...');try{const p=await docGet('prev');if(!p||!Object.keys(p).length){msg('Geri alınacak kayıt yok');return}const cur=await docGet('main');await docSet('prev',cur);await docSet('main',p);D=norm(p);draw();msg('↩ Önceki hal geri yüklendi')}catch(e){msg('Hata: '+e.message)}};
 })();
 </script>
