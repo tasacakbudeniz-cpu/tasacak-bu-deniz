@@ -1201,44 +1201,72 @@ setTimeout(notiInit,4000);
  base.forEach(r=>M.forEach(m=>{const k=r[0]+'|'+m;if(!have.has(k)){have.add(k);QS.push([r[0],r[1],r[2],r[3],r[4],r[5],m])}}))})();
 
 </script>
-<script>// admin.js — gizli yönetim paneli. Karakterler başlığına 10 kez dokun, şifre sor.
+<script>// admin.js — tam ekran yönetici paneli. Karakterler başlığına 10 kez dokun, şifre sor.
 (function(){
 const PW='987654321';let tc=0,tt=0;
 document.addEventListener('click',e=>{const h=e.target.closest&&e.target.closest('h2');if(!h||!/Karakterler/.test(h.textContent))return;const n=Date.now();if(n-tt>3000)tc=0;tt=n;if(++tc>=10){tc=0;adLogin()}},true);
-const IS="background:#fff;color:#111;-webkit-text-fill-color:#111;border:1px solid #888;border-radius:6px;-webkit-appearance:none;opacity:1;width:100%;padding:8px;font-size:16px;box-sizing:border-box;";
-const F={cards:[['t','Başlık'],['img','Resim (linkini yaz ya da galeriden seç)'],['l','Tıklanınca açılacak link']],trl:[['t','Fragman adı'],['yt','YouTube linki']],photos:[['t','Açıklama'],['img','Resim (linkini yaz ya da galeriden seç)']],lig:[['nm','Kullanıcı adı (örn: altay1)'],['d','Düzeltme puanı (+ ya da -)'],['n','Not']]};
-const PIC={cards:1,photos:1};
-const TABS=[['cards','🃏 Kartlar'],['trl','🎬 Fragman'],['photos','📸 Fotoğraf'],['lig','🏆 Lig'],['note','🔔 Bildirim']];
-let D={},TAB='cards';const IC={};
+const CATS=[
+ {k:'dash',l:'📊 Özet'},
+ {k:'cards',l:'🃏 Kartlar',f:[['t','Başlık'],['img','Resim (link ya da galeri)'],['l','Açılacak link']],pic:1},
+ {k:'trl',l:'🎬 Fragmanlar',f:[['t','Ad'],['yt','YouTube linki']]},
+ {k:'photos',l:'📸 Fotoğraflar',f:[['t','Açıklama'],['img','Resim (link ya da galeri)']],pic:1},
+ {k:'lig',l:'🏆 Lig düzeltme',f:[['nm','Kullanıcı adı'],['d','Düzeltme puanı (+/-)'],['n','Not']]},
+ {k:'duyuru',l:'📣 Duyurular',f:[['t','Başlık'],['b','Metin']]},
+ {k:'bakim',l:'🛠 Bakım modu',single:1},
+ {k:'note',l:'🔔 Bildirim metni',single:1}
+];
+const IS="background:#0f1d2e;color:#fff;-webkit-text-fill-color:#fff;border:1px solid #3b5573;border-radius:8px;-webkit-appearance:none;width:100%;padding:10px;font-size:16px;box-sizing:border-box;margin-top:4px;";
+const BT="background:#1e3350;color:#fff;border:1px solid #3b5573;border-radius:8px;padding:8px 12px;font-size:14px;margin:3px;";
+const BTG="background:#e8b84a;color:#111;border:0;border-radius:8px;padding:10px 16px;font-size:15px;font-weight:bold;margin:3px;";
+let D={},TAB='dash',Q='',DIRTY=0;const IC={};
 const H=()=>({'Content-Type':'application/json',Authorization:'Bearer '+NET.tk});
-function adBox(h){adClose();const d=document.createElement('div');d.id='adm';d.style.cssText='position:fixed;inset:0;background:#000c;z-index:9999;overflow:auto;padding:14px';d.innerHTML=`<div style="background:#fff;color:#111;max-width:560px;margin:auto;padding:14px;border-radius:12px;font-size:15px">${h}</div>`;document.body.append(d)}
+function css(){if(document.getElementById('adcss'))return;const s=document.createElement('style');s.id='adcss';s.textContent='#adm{position:fixed;inset:0;background:#07111c;color:#fff;z-index:9999;display:flex;flex-direction:column;font-family:-apple-system,sans-serif}#adm .adN{display:flex;gap:6px;overflow-x:auto;padding:8px;border-bottom:1px solid #1e3350;flex:none}#adm .adB{flex:1;overflow:auto;padding:12px}#adm .adC{background:#11243a;border:1px solid #2a4566;border-radius:12px;padding:12px;margin-bottom:12px}#adm .adG{display:grid;gap:10px;grid-template-columns:repeat(2,1fr)}@media(min-width:800px){#adm .adW{flex-direction:row}#adm .adN{flex-direction:column;width:210px;overflow:visible;border-bottom:0;border-right:1px solid #1e3350}#adm .adW{display:flex;flex:1;min-height:0}#adm .adG{grid-template-columns:repeat(3,1fr)}}#adm label{display:block;font-size:12px;color:#9fb6d0;margin-top:8px}';document.head.append(s)}
+function open(){css();let d=document.getElementById('adm');if(!d){d=document.createElement('div');d.id='adm';document.body.append(d)}return d}
 window.adClose=()=>{const d=document.getElementById('adm');if(d)d.remove()};
-function msg(t){const s=document.getElementById('adst');if(s)s.textContent=t;return t}
-function adLogin(){adBox(`<h3>🔐 Yönetici girişi</h3><input id="adp" type="password" placeholder="Şifre" style="${IS}"><br><br><button id="adgo">Giriş</button> <button onclick="adClose()">Kapat</button>`);
+function msg(t){const s=document.getElementById('admsg');if(s)s.textContent=t;return t}
+function adLogin(){const d=open();d.innerHTML=`<div style="padding:30px;max-width:420px;margin:auto;width:100%"><h2>🔐 Yönetici girişi</h2><input id="adp" type="password" placeholder="Şifre" style="${IS}"><br><br><button style="${BTG}" id="adgo">Giriş</button> <button style="${BT}" onclick="adClose()">Kapat</button></div>`;
  document.getElementById('adgo').onclick=()=>{if(document.getElementById('adp').value===PW)adOpen();else toast('Yanlış şifre')}}
 async function docGet(n){try{const r=await fetch(FB+'/cfg/'+n);if(!r.ok)return {};const d=await r.json();return JSON.parse(d.fields.data.stringValue)}catch(e){return {}}}
 async function docSet(n,c){await nauth();const r=await fetch(FB+'/cfg/'+n,{method:'PATCH',headers:H(),body:JSON.stringify({fields:{data:{stringValue:JSON.stringify(c)}}})});if(!r.ok)throw new Error('Kayıt hatası '+r.status)}
 async function imgSet(id,d){await nauth();const r=await fetch(FB+'/imgs/'+id,{method:'PATCH',headers:H(),body:JSON.stringify({fields:{d:{stringValue:d}}})});if(!r.ok)throw new Error('Fotoğraf kaydedilemedi '+r.status)}
 async function imgGet(id){if(IC[id])return IC[id];try{const r=await fetch(FB+'/imgs/'+id);const j=await r.json();IC[id]=j.fields.d.stringValue;return IC[id]}catch(e){return ''}}
-function shrink(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,640/Math.max(im.width,im.height));const c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',0.72))};im.onerror=rej;im.src=r.result};r.onerror=rej;r.readAsDataURL(file)})}
-function norm(c){c=c||{};return {cards:c.cards||[],trl:c.trl||[],photos:c.photos||[],lig:c.lig||[],note:c.note||''}}
-async function adOpen(){await nauth();D=norm(await docGet('main'));TAB='cards';draw()}
-function draw(){
- const rows=D[TAB].map((it,i)=>`<div style="border:1px solid #ccc;border-radius:10px;padding:8px;margin:8px 0">${PIC[TAB]?`<img data-img="${esc(it.img||'')}" style="max-width:140px;max-height:100px;display:block;margin:4px 0;border-radius:6px">`:''}${F[TAB].map(([k,l])=>`<label style="display:block;font-size:12px;margin-top:4px">${l}<input value="${esc(it[k]??'')}" oninput="adSet(${i},'${k}',this.value)" style="${IS}"></label>`).join('')}${PIC[TAB]?`<label style="display:block;font-size:12px;margin-top:6px">📷 Galeriden fotoğraf seç<input type="file" accept="image/*" onchange="adPick(${i},this)" style="font-size:13px"></label>`:''}<button onclick="adDel(${i})" style="margin-top:6px">🗑 Sil</button></div>`).join('');
- const body=TAB=='note'?`<label>Günlük bildirim metni</label><textarea style="${IS}height:120px" oninput="D.note=this.value">${esc(D.note)}</textarea>`:rows+`<button onclick="adAdd()">＋ Yeni ekle</button>`;
- const uid=NET.uid||'(giriş yok)';
- adBox(`<h3 style="margin:0 0 6px">🛠 Yönetici paneli</h3><div style="font-size:11px;color:#666;word-break:break-all">UID: ${esc(uid)}</div><div style="font-size:12px;margin:6px 0">Kart ${D.cards.length} · Fragman ${D.trl.length} · Fotoğraf ${D.photos.length} · Lig düzeltme ${D.lig.length}</div><div style="margin:8px 0">${TABS.map(([k,l])=>`<button onclick="adTab('${k}')" style="margin:2px;${k==TAB?'font-weight:bold':''}">${l}</button>`).join('')}</div>${body}<div id="adst" style="color:#c00;font-size:13px;margin-top:8px"></div><br><button onclick="adSave()">💾 Kaydet</button> <button onclick="adUndo()">↩ Geri al</button> <button onclick="adClose()">Kapat</button>`);
- document.querySelectorAll('img[data-img]').forEach(async im=>{const v=im.getAttribute('data-img');if(v.startsWith('db:'))im.src=await imgGet(v.slice(3));else if(v)im.src=v})}
-window.adTab=t=>{TAB=t;draw()};
-window.adSet=(i,k,v)=>{D[TAB][i][k]=v};
-window.adDel=i=>{D[TAB].splice(i,1);draw()};
-window.adAdd=()=>{const o={};F[TAB].forEach(([k])=>o[k]='');D[TAB].push(o);draw()};
-window.adPick=async(i,inp)=>{const f=inp.files&&inp.files[0];if(!f)return;msg('Fotoğraf hazırlanıyor...');try{const d=await shrink(f);if(d.length>950000)throw new Error('Fotoğraf hâlâ çok büyük, başka bir fotoğraf dene');const id=Date.now().toString(36)+Math.random().toString(36).slice(2,6);await imgSet(id,d);IC[id]=d;D[TAB][i].img='db:'+id;draw();msg('✅ Fotoğraf eklendi, kaydetmeyi unutma')}catch(e){msg('Hata: '+e.message)}};
 async function nameUid(nm){const k=String(nm||'').trim().toLowerCase();const r=await fetch(FB+'/names/'+k);if(!r.ok)throw new Error('Kullanıcı bulunamadı: '+k);const j=await r.json();return j.fields.u.stringValue}
+function shrink(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,640/Math.max(im.width,im.height));const c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',0.72))};im.onerror=rej;im.src=r.result};r.onerror=rej;r.readAsDataURL(file)})}
+function norm(c){c=c||{};return {cards:c.cards||[],trl:c.trl||[],photos:c.photos||[],lig:c.lig||[],duyuru:c.duyuru||[],bakim:c.bakim||{on:false,msg:''},note:c.note||''}}
+const cat=k=>CATS.find(c=>c.k==k);
+async function adOpen(){await nauth();D=norm(await docGet('main'));TAB='dash';Q='';DIRTY=0;draw()}
+function nav(){return `<div class="adN">${CATS.map(c=>`<button style="${c.k==TAB?BTG:BT}" onclick="adTab('${c.k}')">${c.l}</button>`).join('')}</div>`}
+function itemHtml(c,it,i){const pic=c.pic;const n=i+1;const tot=D[c.k].length;
+ return `<div class="adC"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px"><b>#${n}</b><span>
+ <button style="${BT}" ${i==0?'disabled':''} onclick="adMove('${c.k}',${i},-1)">↑</button><button style="${BT}" ${i>=tot-1?'disabled':''} onclick="adMove('${c.k}',${i},1)">↓</button><button style="${BT}" onclick="adDup('${c.k}',${i})">⧉ Kopyala</button><button style="${BT}" onclick="adDel('${c.k}',${i})">🗑 Sil</button></span></div>
+ ${pic?`<img data-img="${esc(it.img||'')}" style="max-width:100%;max-height:140px;display:block;margin:8px 0;border-radius:8px">`:''}
+ ${c.f.map(([k,l])=>`<label>${l}<input value="${esc(it[k]??'')}" oninput="adSet('${c.k}',${i},'${k}',this.value)" style="${IS}"></label>`).join('')}
+ ${pic?`<label>📷 Galeriden fotoğraf seç<input type="file" accept="image/*" onchange="adPick('${c.k}',${i},this)" style="color:#fff;margin-top:6px"></label>`:''}</div>`}
+function listView(c){const items=D[c.k].map((it,i)=>[it,i]).filter(([it])=>!Q||Object.values(it).some(v=>String(v).toLowerCase().includes(Q.toLowerCase())));
+ return `<input placeholder="Ara..." value="${esc(Q)}" oninput="adQ(this.value)" style="${IS}margin:0 0 10px"><div>${items.map(([it,i])=>itemHtml(c,it,i)).join('')||'<p style="color:#9fb6d0">Kayıt yok.</p>'}</div><button style="${BTG}" onclick="adAdd('${c.k}')">＋ Yeni ekle</button>`}
+function singleView(c){if(c.k=='bakim'){const b=D.bakim;return `<div class="adC"><label><input type="checkbox" ${b.on?'checked':''} onchange="adBakim(this.checked)"> Bakım modunu aç (uygulama kapanır, mesaj gösterilir)</label><label>Bakım mesajı<textarea oninput="D.bakim.msg=this.value" style="${IS}height:90px">${esc(b.msg)}</textarea></label></div>`}
+ return `<div class="adC"><label>Günlük bildirim metni<textarea oninput="D.note=this.value" style="${IS}height:120px">${esc(D.note)}</textarea></label></div>`}
+function dashView(){return `<div class="adG">${CATS.filter(c=>!c.single).map(c=>`<div class="adC" style="cursor:pointer" onclick="adTab('${c.k}')"><div style="font-size:14px;color:#9fb6d0">${c.l}</div><div style="font-size:28px;font-weight:bold">${D[c.k].length}</div></div>`).join('')}<div class="adC"><div style="font-size:14px;color:#9fb6d0">Bakım</div><div style="font-size:20px;font-weight:bold">${D.bakim.on?'🔴 Açık':'🟢 Kapalı'}</div></div></div><p style="color:#9fb6d0;font-size:13px">Bir kategoriye dokunup düzenle. Değişiklikleri en sonda Kaydet ile yayınla.</p>`}
+function draw(){const d=open();const c=cat(TAB);
+ const body=TAB=='dash'?dashView():c.single?singleView(c):listView(c);
+ d.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid #1e3350"><div><b style="color:#e8b84a">🛠 YÖNETİCİ</b><div style="font-size:10px;color:#6f86a0;word-break:break-all">UID: ${esc(NET.uid||'(giriş yok)')}</div></div><span id="addirty" style="color:#e8b84a;font-size:12px">${DIRTY?'● Kaydedilmemiş değişiklik':''}</span></div><div class="adW" style="display:flex;flex-direction:column;flex:1;min-height:0">${nav()}<div class="adB">${body}</div></div><div style="border-top:1px solid #1e3350;padding:10px;display:flex;flex-wrap:wrap;align-items:center;gap:6px"><button style="${BTG}" onclick="adSave()">💾 Kaydet</button><button style="${BT}" onclick="adUndo()">↩ Geri al</button><button style="${BT}" onclick="adClose()">Kapat</button><span id="admsg" style="color:#ff8a8a;font-size:13px;width:100%"></span></div>`;
+ document.querySelectorAll('img[data-img]').forEach(async im=>{const v=im.getAttribute('data-img');if(v.startsWith('db:'))im.src=await imgGet(v.slice(3));else if(v)im.src=v})}
+function dirty(){DIRTY=1;const s=document.getElementById('addirty');if(s)s.textContent='● Kaydedilmemiş değişiklik'}
+window.adTab=t=>{TAB=t;Q='';draw()};
+window.adQ=v=>{Q=v;draw()};
+window.adSet=(k,i,f,v)=>{D[k][i][f]=v;dirty()};
+window.adBakim=v=>{D.bakim.on=v;dirty();draw()};
+window.adDel=(k,i)=>{D[k].splice(i,1);dirty();draw()};
+window.adDup=(k,i)=>{D[k].splice(i+1,0,JSON.parse(JSON.stringify(D[k][i])));dirty();draw()};
+window.adMove=(k,i,d)=>{const j=i+d;if(j<0||j>=D[k].length)return;[D[k][i],D[k][j]]=[D[k][j],D[k][i]];dirty();draw()};
+window.adAdd=k=>{const c=cat(k);const o={};c.f.forEach(([f])=>o[f]='');D[k].push(o);dirty();draw()};
+window.adPick=async(k,i,inp)=>{const f=inp.files&&inp.files[0];if(!f)return;msg('Fotoğraf hazırlanıyor...');try{const d=await shrink(f);if(d.length>950000)throw new Error('Fotoğraf hâlâ çok büyük, başka bir fotoğraf dene');const id=Date.now().toString(36)+Math.random().toString(36).slice(2,6);await imgSet(id,d);IC[id]=d;D[k][i].img='db:'+id;dirty();draw();msg('✅ Fotoğraf eklendi, Kaydet’i unutma')}catch(e){msg('Hata: '+e.message)}};
 window.adSave=async()=>{const clean=a=>a.filter(o=>Object.values(o).some(v=>String(v).trim()));
- const c={cards:clean(D.cards),trl:clean(D.trl),photos:clean(D.photos),lig:[],note:D.note||''};
- msg('Kaydediliyor...');try{for(const o of clean(D.lig)){const uid=await nameUid(o.nm);c.lig.push({uid,nm:String(o.nm).trim().toLowerCase(),d:Number(o.d)||0,n:o.n||''})}const prev=await docGet('main');await docSet('prev',prev);await docSet('main',c);D=c;toast('✅ Kaydedildi');adClose()}catch(e){msg('Kaydedilmedi: '+e.message)}};
-window.adUndo=async()=>{msg('Geri alınıyor...');try{const p=await docGet('prev');if(!p||!Object.keys(p).length){msg('Geri alınacak kayıt yok');return}const cur=await docGet('main');await docSet('prev',cur);await docSet('main',p);D=norm(p);draw();msg('↩ Önceki hal geri yüklendi')}catch(e){msg('Hata: '+e.message)}};
+ msg('Kaydediliyor...');try{const lig=[];for(const o of clean(D.lig)){const uid=await nameUid(o.nm);lig.push({uid,nm:String(o.nm).trim().toLowerCase(),d:Number(o.d)||0,n:o.n||''})}
+ const c={cards:clean(D.cards),trl:clean(D.trl),photos:clean(D.photos),lig,duyuru:clean(D.duyuru),bakim:{on:!!D.bakim.on,msg:D.bakim.msg||''},note:D.note||''};
+ const prev=await docGet('main');await docSet('prev',prev);await docSet('main',c);D=c;DIRTY=0;toast('✅ Yayınlandı');draw()}catch(e){msg('Kaydedilmedi: '+e.message)}};
+window.adUndo=async()=>{msg('Geri alınıyor...');try{const p=await docGet('prev');if(!p||!Object.keys(p).length){msg('Geri alınacak kayıt yok');return}const cur=await docGet('main');await docSet('prev',cur);await docSet('main',p);D=norm(p);DIRTY=0;draw();toast('↩ Önceki hal geri yüklendi')}catch(e){msg('Hata: '+e.message)}};
+window.adOpen=adOpen;
 })();
 </script>
 </body></html>
